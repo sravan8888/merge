@@ -1,0 +1,65 @@
+1. Scenario: You committed code with sensitive data (like a password or API key) and pushed to GitHub. What will you do?
+2.In GitHub, “rotate credentials” means replacing your old authentication tokens, SSH keys, or passwords with new ones to reduce security risks.
+  Why rotate credentials?
+  Compromised keys/tokens → If your personal access token (PAT), SSH key, or GitHub App secret is leaked.
+Best practice → Even if not leaked, rotating (regenerating) credentials periodically keeps your account secure.
+Compliance → Some companies require rotation every 30/60/90 days.
+
+2. Scenario: You are working in a feature branch and master/main got updated. How will you bring latest changes into your branch?
+👉 In interviews, say:
+“I prefer rebase for feature branches to keep history clean. For production branches, I usually do merge to avoid rewriting history.”
+3. Scenario: You pushed wrong code to the main branch by mistake. How do you revert it?
+4.Scenario: You want to apply a single commit from one branch into another without merging whole branch.
+Answer:
+Use git cherry-pick.
+git checkout main
+git cherry-pick <commit-hash>
+
+👉 Example:
+Feature branch has a bug fix commit: f9a8e7
+You want it in main:
+git checkout main
+git cherry-pick f9a8e7
+
+5. Scenario: Jenkins build failed because your branch had conflicts with main. How do you resolve it?
+Answer:
+Fetch and rebase or merge:
+git fetch origin
+git checkout my-feature
+git rebase origin/main   # or git merge origin/main
+Resolve conflicts in files (manual edit).
+Example conflict:
+
+<<<<<<< HEAD
+code from main
+=======
+code from feature
+>>>>>>> my-feature
+Fix the code → git add file → git rebase --continue.
+Push again:
+git push origin my-feature --force   # if rebased
+
+6. Scenario: You need to check which commits modified a specific file.
+Answer:
+git log -- <filename>
+👉 Example:
+git log -- src/app.py
+Shows commit history only for that file.
+
+7.7. Scenario: You want to know who introduced a bug in a file.
+Answer:
+Use git blame.
+git blame src/app.py
+It shows line-by-line history with commit hash and author.
+👉 Real world: Useful when debugging production issues.
+
+8. Scenario: How do you collaborate with multiple developers in GitHub?
+“In a team, each developer works on feature branches, pushes to GitHub, and opens a Pull Request. The team reviews and approves the code, CI/CD pipelines validate it, and then we merge it into the main branch. 
+We also protect main with branch rules to avoid direct pushes. This ensures smooth collaboration without breaking production.”
+
+9. Scenario: You committed in the wrong branch by mistake. How do you move the commit to correct branch?
+Go back to wrong branch and remove commit:
+git checkout wrong-branch
+git reset --hard HEAD~1
+
+
